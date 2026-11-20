@@ -136,15 +136,15 @@ td,th{padding:7px 8px;border-bottom:1px solid var(--ln);text-align:left;white-sp
 </script>
 
 <script>
-const WA="5493549456019"; // Reemplazá por tu número: código de país + área + número, sin signos
+const WA="5493549456019"; // número de WhatsApp (código de país + área + número, sin signos)
 /* ====== CONFIGURACIÓN GOOGLE SHEETS: pegá el link CSV publicado ====== */
-const SHEET_URL= "https://docs.google.com/spreadsheets/d/e/2PACX-1vTAqdpF7sLx__680Q0xKvrgI2cWrDUjlME8-JIEZZoCHK0Bm3fgx5f-8cBO9AsjmePYAg-Bmg72iL3j/pub?gid=0&single=true&output=csv";
+const SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTAqdpF7sLx__680Q0xKvrgI2cWrDUjlME8-JIEZZoCHK0Bm3fgx5f-8cBO9AsjmePYAg-Bmg72iL3j/pub?gid=0&single=true&output=csv";
 const KEY="js_products_v1",SZ=["S","M","L","XL","XXL"];
 const CATS={player:"Versión Jugador",fan:"Versión Hincha",retro:"Retro",shorts:"Shorts"};
 const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const DEF=JSON.parse(document.getElementById("pdata").textContent);
-let P=DEF,cart=ld("js_cart",[]),ship=ld("js_ship",{cp:"",barrio:"",m:""});
+let P=SHEET_URL.includes("PEGA_AQUI")?DEF:[],status="Cargando productos...",cart=ld("js_cart",[]),ship=ld("js_ship",{cp:"",barrio:"",m:""});
 let F={cat:"all",size:"",max:200000,q:""},cur=null,editId=null;
 const $=s=>document.querySelector(s);
 const fmt=n=>"$"+Number(n).toLocaleString("es-AR");
@@ -154,7 +154,7 @@ const find=id=>P.find(p=>p.id==id);
 /* Ilustración de camiseta (reemplazá por fotos agregando p.images:[url,...]) */
 function art(p,v=0){
  const c1=p.c1,c2=p.c2,id="k"+p.id+"_"+v,F="font-family:'Bebas Neue',Impact,sans-serif";
- if(p.images&&p.images.length)return `<img src="${esc(p.images[v]||p.images[0])}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`;
+ if(p.images&&p.images.length)return `<img src="${esc(p.images[v]||p.images[0])}" alt="${esc(p.name)}" referrerpolicy="no-referrer" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=&quot;color:#999;font-size:12px;padding:20px;text-align:center&quot;>Foto no disponible</div>'">`;
  if(p.cat==="shorts")return `<svg viewBox="0 0 200 220"><path d="M45 50H155L168 175H108L100 108L92 175H32Z" fill="${c1}"/><path d="M45 50H155V64H45Z" fill="${c2}"/><path d="M155 50L168 175H158L146 50Z" fill="${c2}"/><text x="100" y="${v==1?150:100}" text-anchor="middle" font-size="26" fill="${c2}" style="${F}">${esc(p.club)}</text></svg>`;
  const body="M62 22L86 12Q100 30 114 12L138 22L186 58L166 90L146 76V206H54V76L34 90L14 58Z";
  let st="";
@@ -168,16 +168,17 @@ function art(p,v=0){
  return `<svg viewBox="0 0 200 220">${g}</svg>`;
 }
 
-/* Envíos (cotización simulada: ajustá las tarifas) */
-function quote(cp,barrio){
- const n=parseInt(cp,10);if(!(cp.length>=4&&n>0))return null;
- const cap=n>=5000&&n<=5023,r=String(cp)[0];
- const t=r==="5"?[4200,6300]:"12".includes(r)?[5200,7500]:[6200,8900];
- const o=[{k:"sucursal",l:"Correo Argentino (Sucursal)",p:t[0],n:"3 a 7 días hábiles"},{k:"domicilio",l:"Correo Argentino (Domicilio)",p:t[1],n:"3 a 7 días hábiles"},{k:"retiro",l:"Retiro en local (Córdoba Capital)",p:0,n:"Gratis, coordinamos día y hora"}];
- if(cap)o.push({k:"cadete",l:"Cadete en Córdoba Capital",p:n<=5009?2500:3500,n:"Precio estimado, se confirma según barrio"+(barrio?` (${esc(barrio)})`:"")});
- return o;
-}
-const optHTML=(o,sel,fn)=>o.map(x=>`<label class="opt"><input type="radio" name="sm" value="${x.k}" ${sel==x.k?"checked":""} onchange="${fn}('${x.k}')"><span>${x.l}<br><small style="color:var(--mu)">${x.n}</small></span><b>${x.p?fmt(x.p):"Gratis"}</b></label>`).join("");
+/* Opciones de envío: p = precio fijo en pesos, 0 = gratis, null = "a confirmar por WhatsApp" */
+const SHIP=[
+ {k:"correo",l:"Envío por correo (Correo Argentino)",p:null,n:"Te confirmamos el costo por WhatsApp según tu código postal"},
+ {k:"cordoba",l:"Envío dentro de Córdoba",p:null,n:"Costo a coordinar según tu barrio"},
+ {k:"retiro",l:"Retiro en local (Córdoba Capital)",p:0,n:"Gratis, coordinamos día y hora"}
+];
+const optHTML=(o,sel,fn)=>o.map(x=>`<label class="opt"><input type="radio" name="sm" value="${x.k}" ${sel==x.k?"checked":""} onchange="${fn}('${x.k}')"><span>${x.l}<br><small style="color:var(--mu)">${x.n}</small></span><b>${x.p==null?"A confirmar":x.p?fmt(x.p):"Gratis"}</b></label>`).join("");
+const shipM=()=>SHIP.find(x=>x.k==ship.m);
+const shipOk=()=>{const m=shipM();return !!m&&(m.k!="correo"||/^\d{4}$/.test(ship.cp||""))&&(m.k!="cordoba"||!!ship.barrio)};
+const wl=()=>{const m=shipM();return !m?"Elegí un método de envío":shipOk()?"Finalizar compra por WhatsApp":m.k=="correo"?"Ingresá tu código postal":"Ingresá tu barrio"};
+function setF(k,v){ship[k]=v.trim();sv("js_ship",ship);const b=$("#wab");if(b){b.disabled=!shipOk();b.textContent=wl()}}
 
 /* Catálogo */
 function renderCats(){
@@ -188,7 +189,7 @@ function renderCats(){
 function renderGrid(){
  const q=F.q.toLowerCase();
  const l=P.filter(p=>p.active!==false&&(F.cat=="all"||p.cat==F.cat)&&(!F.size||(p.stock[F.size]||0)>0)&&p.price<=F.max&&(!q||(p.name+" "+p.club+" "+p.country).toLowerCase().includes(q)));
- $("#grid").innerHTML=l.length?l.map(p=>`<button class="card" onclick="openP(${p.id})"><div class="art">${art(p)}</div><div class="i"><span class="tag">${CATS[p.cat]}</span><h3>${esc(p.name)}</h3><span class="pr">${fmt(p.price)}</span></div></button>`).join(""):`<div class="empty">No hay productos con esos filtros. Probá quitar el talle o subir el precio.</div>`;
+ $("#grid").innerHTML=l.length?l.map(p=>`<button class="card" onclick="openP(${p.id})"><div class="art">${art(p)}</div><div class="i"><span class="tag">${CATS[p.cat]}</span><h3>${esc(p.name)}</h3><span class="pr">${fmt(p.price)}</span></div></button>`).join(""):`<div class="empty">${P.length?"No hay productos con esos filtros. Probá quitar el talle o subir el precio.":status}</div>`;
 }
 function renderAll(){renderCats();renderGrid()}
 
@@ -201,14 +202,7 @@ function drawP(){
  <h2 style="font-size:44px;line-height:1">${esc(p.name)}</h2><div class="pr" style="font-size:24px">${fmt(p.price)}</div>
  <p style="color:var(--mu)">${esc(p.club)} · ${esc(p.country)} · ${p.year}</p>
  <b>Talle</b><div class="sizes">${SZ.map(s=>{const n=p.stock[s]||0;return `<button class="sz ${size==s?"on":""}" ${n?"":"disabled"} onclick="cur.size='${s}';drawP()">${s}<small>${n?(n<=3?"Quedan "+n:"Disponible"):"Sin stock"}</small></button>`}).join("")}</div>
- <div class="box"><b>Calcular envío</b><div class="row" style="margin-top:8px"><input class="f" id="cp" inputmode="numeric" maxlength="4" placeholder="Código postal" value="${esc(cur.cp)}"><input class="f" id="bar" placeholder="Barrio (opcional)" value="${esc(ship.barrio)}"><button class="btn ghost" onclick="calc()">Calcular</button></div><div id="sres">${cur.res}</div></div>
- <button class="btn" style="width:100%" ${size?"":"disabled"} onclick="addCart()">${size?"Agregar al carrito":"Elegí un talle"}</button></div>`;
-}
-function calc(){
- cur.cp=$("#cp").value.trim();ship.cp=cur.cp;ship.barrio=$("#bar").value.trim();sv("js_ship",ship);
- const o=quote(cur.cp,ship.barrio);
- cur.res=o?o.map(x=>`<div class="tot"><span>${x.l}<br><small style="color:var(--mu)">${x.n}</small></span><b>${x.p?fmt(x.p):"Gratis"}</b></div>`).join(""):`<p style="color:var(--mu)">Ingresá un código postal de 4 dígitos, por ejemplo 5000.</p>`;
- const b=$("#bar").value;drawP();$("#bar").value=b;
+  <button class="btn" style="width:100%" ${size?"":"disabled"} onclick="addCart()">${size?"Agregar al carrito":"Elegí un talle"}</button></div>`;
 }
 function addCart(){
  const {p,size}=cur,k=p.id+"|"+size,it=cart.find(i=>i.k==k),mx=p.stock[size]||0;
@@ -219,25 +213,26 @@ function addCart(){
 /* Carrito */
 const price=i=>find(i.id)?.price||0;
 function renderCart(){
- const sub=cart.reduce((a,i)=>a+price(i)*i.q,0),o=quote(ship.cp,ship.barrio)||[];
- const m=o.find(x=>x.k==ship.m),sp=m?m.p:0;
+ const sub=cart.reduce((a,i)=>a+price(i)*i.q,0),m=shipM(),sp=m&&m.p?m.p:0;
  $("#cc").textContent=cart.reduce((a,i)=>a+i.q,0);
  $("#cart").innerHTML=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="font-size:36px">Tu carrito</h2><button class="ib" onclick="closeAll()" aria-label="Cerrar">✕</button></div>
  ${cart.length?cart.map(i=>{const p=find(i.id);return `<div class="it"><div class="art">${art(p)}</div><div style="flex:1"><b>${esc(p.name)}</b><br><small style="color:var(--mu)">${CATS[p.cat]} · Talle ${i.size}</small><div class="row qty" style="align-items:center;margin-top:6px"><button onclick="qty('${i.k}',-1)" aria-label="Menos">−</button><span>${i.q}</span><button onclick="qty('${i.k}',1)" aria-label="Más">+</button><button style="margin-left:auto;width:auto;padding:0 10px;border-radius:99px" onclick="qty('${i.k}',-99)">Quitar</button></div></div><b>${fmt(price(i)*i.q)}</b></div>`}).join("")
  :`<div class="empty">Tu carrito está vacío. Elegí una camiseta y un talle para empezar.</div>`}
- ${cart.length?`<div class="box"><b>Envío</b><div class="row" style="margin:8px 0"><input class="f" id="ccp" inputmode="numeric" maxlength="4" placeholder="Código postal" value="${esc(ship.cp)}"><input class="f" id="cbar" placeholder="Barrio" value="${esc(ship.barrio)}"><button class="btn ghost" onclick="cShip()">OK</button></div>${o.length?optHTML(o,ship.m,"pickM"):`<small style="color:var(--mu)">Ingresá tu código postal para ver las opciones.</small>`}</div>
- <div class="tot"><span>Subtotal</span><b>${fmt(sub)}</b></div><div class="tot"><span>Envío</span><b>${m?(sp?fmt(sp):"Gratis"):"A elegir"}</b></div><div class="tot g"><span>Total</span><span>${fmt(sub+sp)}</span></div>
- <button class="btn wa" ${m?"":"disabled"} onclick="wa()">${m?"Finalizar compra por WhatsApp":"Elegí un método de envío"}</button>`:""}`;
+ ${cart.length?`<div class="box"><b>Envío</b><div style="margin-top:6px">${optHTML(SHIP,ship.m,"pickM")}</div>${m&&m.k=="correo"?`<input class="f" inputmode="numeric" maxlength="4" placeholder="Código postal (4 dígitos)" value="${esc(ship.cp||"")}" oninput="setF('cp',this.value)" style="margin-top:8px">`:""}${m&&m.k=="cordoba"?`<input class="f" placeholder="Barrio y dirección" value="${esc(ship.barrio||"")}" oninput="setF('barrio',this.value)" style="margin-top:8px">`:""}</div>
+ <div class="tot"><span>Subtotal</span><b>${fmt(sub)}</b></div><div class="tot"><span>Envío</span><b>${!m?"A elegir":m.p==null?"A confirmar":m.p?fmt(m.p):"Gratis"}</b></div><div class="tot g"><span>Total</span><span>${fmt(sub+sp)}${m&&m.p==null?" + envío":""}</span></div>
+ <button id="wab" class="btn wa" ${shipOk()?"":"disabled"} onclick="wa()">${wl()}</button>`:""}`;
 }
 function qty(k,d){const i=cart.find(x=>x.k==k);if(!i)return;const mx=find(i.id).stock[i.size]||0;i.q=Math.min(mx,i.q+d);if(i.q<=0)cart=cart.filter(x=>x!==i);sv("js_cart",cart);renderCart()}
-function cShip(){ship.cp=$("#ccp").value.trim();ship.barrio=$("#cbar").value.trim();ship.m="";sv("js_ship",ship);renderCart()}
 function pickM(k){ship.m=k;sv("js_ship",ship);renderCart()}
 function wa(){
- const o=quote(ship.cp,ship.barrio),m=o.find(x=>x.k==ship.m);
+ const m=shipM();if(!shipOk())return;
  const sub=cart.reduce((a,i)=>a+price(i)*i.q,0);
  let t="*Nuevo pedido - Juego Sagrado Camisetas*\n\n";
  cart.forEach((i,n)=>{const p=find(i.id);t+=`${n+1}. ${p.name}\n   Versión: ${CATS[p.cat]} | Talle: ${i.size} | Cant: ${i.q} | ${fmt(price(i)*i.q)}\n`});
- t+=`\n*Envío:* ${m.l}\n*CP:* ${ship.cp}${ship.barrio?" | *Barrio:* "+ship.barrio:""}\n*Costo de envío:* ${m.p?fmt(m.p):"Gratis"}\n\nSubtotal: ${fmt(sub)}\n*TOTAL: ${fmt(sub+m.p)}*`;
+ t+=`\n*Envío:* ${m.l}`;
+ if(m.k=="correo")t+=`\n*Código postal:* ${ship.cp}`;
+ if(m.k=="cordoba")t+=`\n*Barrio/dirección:* ${ship.barrio}`;
+ t+=`\n*Costo de envío:* ${m.p==null?"A confirmar":m.p?fmt(m.p):"Gratis"}\n\nSubtotal: ${fmt(sub)}\n*TOTAL: ${fmt(sub+(m.p||0))}${m.p==null?" + envío":""}*`;
  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(t)}`,"_blank");
 }
 function openCart(){renderCart();$("#cartOv").classList.add("on")}
@@ -290,7 +285,8 @@ async function loadDB(){
    const g=c=>(x[k.indexOf(c)]||"").trim(),im=g("images").split(/[\s,|]+/).filter(Boolean).map(imgUrl);
    return {id:+g("id")||n+1,name:g("name"),club:g("club"),country:g("country"),cat:g("cat").toLowerCase(),price:+g("price").replace(/[^\d]/g,"")||0,year:g("year"),active:g("active").toUpperCase()!="FALSE",stock:Object.fromEntries(SZ.map(z=>[z,parseInt(g(z))||0])),c1:g("c1")||"#1a1a1a",c2:g("c2")||"#00FF38",pat:g("pat")||"s",images:im.length?im:null}
   }).filter(p=>p.active&&CATS[p.cat]);
- }catch(e){console.error("Sheets:",e);P=DEF}
+  if(!P.length)status="La planilla se leyó pero no tiene productos válidos. Revisá que cat sea player, fan, retro o shorts y que active sea TRUE.";
+ }catch(e){console.error("Sheets:",e);P=[];status="No se pudo leer la planilla ("+e.message+"). Revisá que el link CSV esté publicado y completo."}
  cart=cart.filter(i=>find(i.id));sv("js_cart",cart);renderAll();renderCart();
 }
 setTheme(ld("js_theme","dark"));renderAll();renderCart();route();loadDB();
