@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+const SHEET_URL= "https://docs.google.com/spreadsheets/d/e/2PACX-1vTAqdpF7sLx__680Q0xKvrgI2cWrDUjlME8-JIEZZoCHK0Bm3fgx5f-8cBO9AsjmePYAg-Bmg72iL3j/pubhtml";
+<title>Juego Sagrado Camisetas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--s1:#121212;--s2:#1E1E1E;--tx:#F2F5E8;--mu:#9aa08c;--ac:#00FF38;--ink:#00FF38;--ln:#2a2a2a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root[data-theme="light"]{--bg:#F2F5E8;--s1:#fff;--s2:#e6ebd8;--tx:#0A0A0A;--mu:#5b6150;--ink:#0a7a1e;--ln:#cfd6bf;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.5 Inter,system-ui,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+h1,h2,h3,.bn{font-family:"Bebas Neue",Oswald,Impact,sans-serif;font-weight:400;letter-spacing:.02em;margin:0}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--ln);padding-top:env(safe-area-inset-top,0px)}
+.bar{display:flex;gap:12px;align-items:center;padding:10px 16px;max-width:1200px;margin:auto}
+.logo{font:400 30px/1 "Bebas Neue",Impact,sans-serif;color:var(--tx);text-decoration:none;display:flex;align-items:flex-end;gap:3px}
+.logo i{width:8px;height:8px;border-radius:50%;background:var(--ac);margin-bottom:3px}
+.search{flex:1;min-width:0;background:var(--s1);border:1px solid var(--ln);border-radius:99px;padding:9px 16px}
+.ib{background:var(--s1);border:1px solid var(--ln);border-radius:99px;height:40px;min-width:40px;padding:0 12px;display:flex;align-items:center;gap:6px;justify-content:center}
+.ib b{background:var(--ac);color:#0A0A0A;border-radius:99px;font-size:12px;padding:0 6px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;max-width:1200px;margin:auto}
+.chip{white-space:nowrap;background:none;border:1px solid var(--ln);border-radius:99px;padding:6px 14px}
+.chip.on{background:var(--ac);color:#0A0A0A;border-color:var(--ac);font-weight:600}
+.hero{padding:56px 16px 44px;background:radial-gradient(ellipse at 85% 10%,#2bd60099,transparent 55%),radial-gradient(ellipse at 100% 80%,#00ff3840,transparent 50%),var(--bg);border-bottom:1px solid var(--ln)}
+.hero>div{max-width:1200px;margin:auto}
+.hero h1{font-size:clamp(56px,13vw,150px);line-height:.88;max-width:9ch}
+.hero p{max-width:44ch;color:var(--tx);opacity:.85;margin:16px 0 22px}
+.btn{background:var(--ac);color:#0A0A0A;border:0;border-radius:6px;padding:13px 22px;font-weight:800;text-decoration:none;display:inline-block}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--tx);border:1px solid var(--ln)}
+main{max-width:1200px;margin:auto;padding:20px 16px 60px}
+.filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:18px;color:var(--mu)}
+.filters .chip{padding:4px 11px}
+.filters input[type=range]{accent-color:var(--ac);vertical-align:middle}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:var(--s1);border:1px solid var(--ln);border-radius:10px;overflow:hidden;cursor:pointer;text-align:left;padding:0;display:block;width:100%}
+.card:hover{border-color:var(--ac)}
+.art{background:var(--s2);aspect-ratio:1/1.05;display:grid;place-items:center}
+.art svg{width:86%}
+.card div.i{padding:12px}
+.card h3{font-size:22px}
+.tag{color:var(--ink);font-size:12px;font-weight:600}
+.pr{font-weight:800;font-size:17px}
+.empty{padding:50px 0;color:var(--mu)}
+.ov{position:fixed;inset:0;background:#000a;z-index:40;display:none}
+.ov.on{display:block}
+.modal{position:absolute;inset:0;margin:auto;max-width:900px;height:fit-content;max-height:100%;overflow:auto;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:700px){.modal{grid-template-columns:1fr;border-radius:0;height:100%}}
+.th{display:flex;gap:8px;margin-top:8px}
+.th button{background:var(--s2);border:2px solid transparent;border-radius:8px;width:64px;padding:4px}
+.th button.on{border-color:var(--ac)}
+.sizes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.sz{border:1px solid var(--ln);background:var(--s1);border-radius:6px;min-width:58px;padding:7px 10px;text-align:center}
+.sz small{display:block;font-size:10px;color:var(--mu)}
+.sz.on{background:var(--ac);color:#0A0A0A;border-color:var(--ac)}
+.sz.on small{color:#0A0A0A}
+.sz[disabled]{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.box{background:var(--s1);border:1px solid var(--ln);border-radius:10px;padding:12px;margin:12px 0}
+.row{display:flex;gap:8px}
+input.f,select.f,textarea.f{background:var(--s2);border:1px solid var(--ln);border-radius:6px;padding:9px 10px;width:100%;min-width:0}
+.opt{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--ln);cursor:pointer}
+.opt:first-of-type{border-top:0}
+.opt span{flex:1}
+.opt input{accent-color:var(--ac)}
+.drawer{position:absolute;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--bg);border-left:1px solid var(--ln);padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overflow:auto}
+.it{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.it .art{width:72px;aspect-ratio:1;border-radius:8px;flex:none}
+.qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--ln);background:var(--s1)}
+.tot{display:flex;justify-content:space-between;padding:3px 0}
+.tot.g{font:400 28px "Bebas Neue",Impact,sans-serif}
+.wa{width:100%;background:#25D366;color:#06210f;font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:14px;display:block;overflow-x:auto}
+td,th{padding:7px 8px;border-bottom:1px solid var(--ln);text-align:left;white-space:nowrap}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.fg label{font-size:12px;color:var(--mu)}
+@media(prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<header>
+ <div class="bar">
+  <a class="logo" href="#">JS<i></i></a>
+  <input id="q" class="search" type="search" placeholder="Buscar por nombre, club o país" aria-label="Buscar">
+  <button class="ib" id="theme" aria-label="Cambiar tema">☾</button>
+  <button class="ib" id="cartBtn" aria-label="Abrir carrito">Carrito <b id="cc">0</b></button>
+ </div>
+ <nav id="cats"></nav>
+</header>
+
+<section class="hero"><div>
+ <h1>El juego es sagrado</h1>
+ <p>Camisetas de fútbol versión jugador, hincha y retro. Envíos a todo el país y retiro en Córdoba Capital.</p>
+ <a class="btn" href="#catalogo">Ver camisetas</a>
+</div></section>
+
+<main id="catalogo">
+ <div id="shop">
+  <div class="filters">
+   <span>Talle</span><span id="szf"></span>
+   <label>Precio hasta <b id="pv"></b> <input id="pr" type="range" min="20000" max="200000" step="5000" value="200000"></label>
+  </div>
+  <div class="grid" id="grid"></div>
+ </div>
+ <section id="admin" hidden>
+  <h2 style="font-size:40px">Panel de productos</h2>
+  <p style="color:var(--mu)">Los cambios se guardan en este navegador. Para publicarlos para todos, tocá “Exportar JSON” y pegá el resultado en el bloque <code>products.json</code> del archivo.</p>
+  <div class="box"><div class="fg" id="form"></div>
+   <div class="row" style="margin-top:10px"><button class="btn" onclick="saveP()">Guardar producto</button><button class="btn ghost" onclick="fillForm()">Limpiar</button></div></div>
+  <table id="atab"></table>
+  <div class="row" style="margin:14px 0"><button class="btn ghost" onclick="expJ()">Exportar JSON</button><button class="btn ghost" onclick="resetP()">Restablecer ejemplo</button></div>
+  <textarea class="f" id="exp" rows="8" hidden></textarea>
+ </section>
+</main>
+
+<div class="ov" id="pdpOv"><div class="modal" id="pdp" role="dialog" aria-modal="true"></div></div>
+<div class="ov" id="cartOv"><aside class="drawer" id="cart" aria-label="Carrito"></aside></div>
+
+<!-- Catálogo editable: agregá, cambiá o deshabilitá productos acá (active:false los oculta) -->
+<script type="application/json" id="pdata">
+[
+{"id":1,"name":"Argentina Titular 2026","club":"Argentina","country":"Argentina","cat":"player","price":89000,"active":true,"c1":"#75AADB","c2":"#FFFFFF","pat":"v","year":2026,"stock":{"S":2,"M":5,"L":4,"XL":1,"XXL":0}},
+{"id":2,"name":"Argentina Titular 2026","club":"Argentina","country":"Argentina","cat":"fan","price":65000,"active":true,"c1":"#75AADB","c2":"#FFFFFF","pat":"v","year":2026,"stock":{"S":4,"M":8,"L":6,"XL":3,"XXL":2}},
+{"id":3,"name":"Boca Juniors Titular","club":"Boca Juniors","country":"Argentina","cat":"fan","price":62000,"active":true,"c1":"#0B2A6F","c2":"#F5C400","pat":"h","year":2025,"stock":{"S":3,"M":6,"L":5,"XL":2,"XXL":0}},
+{"id":4,"name":"River Plate Alternativa","club":"River Plate","country":"Argentina","cat":"fan","price":62000,"active":true,"c1":"#111111","c2":"#E30613","pat":"d","year":2025,"stock":{"S":2,"M":4,"L":4,"XL":2,"XXL":1}},
+{"id":5,"name":"Real Madrid Titular","club":"Real Madrid","country":"España","cat":"player","price":95000,"active":true,"c1":"#FFFFFF","c2":"#C9A227","pat":"s","year":2026,"stock":{"S":1,"M":3,"L":3,"XL":2,"XXL":1}},
+{"id":6,"name":"Barcelona Titular","club":"FC Barcelona","country":"España","cat":"player","price":95000,"active":true,"c1":"#A50044","c2":"#004D98","pat":"v","year":2026,"stock":{"S":2,"M":4,"L":2,"XL":0,"XXL":0}},
+{"id":7,"name":"Brasil 1998","club":"Brasil","country":"Brasil","cat":"retro","price":78000,"active":true,"c1":"#FFDF00","c2":"#009C3B","pat":"s","year":1998,"stock":{"S":1,"M":2,"L":2,"XL":1,"XXL":0}},
+{"id":8,"name":"Boca Juniors 2000","club":"Boca Juniors","country":"Argentina","cat":"retro","price":82000,"active":true,"c1":"#0B2A6F","c2":"#F5C400","pat":"h","year":2000,"stock":{"S":0,"M":2,"L":3,"XL":1,"XXL":0}},
+{"id":9,"name":"Argentina Short Titular","club":"Argentina","country":"Argentina","cat":"shorts","price":38000,"active":true,"c1":"#0A0A0A","c2":"#75AADB","pat":"s","year":2026,"stock":{"S":3,"M":6,"L":6,"XL":3,"XXL":1}},
+{"id":10,"name":"Italia 2006 Retro","club":"Italia","country":"Italia","cat":"retro","price":76000,"active":true,"c1":"#0066B3","c2":"#FFFFFF","pat":"s","year":2006,"stock":{"S":2,"M":3,"L":2,"XL":1,"XXL":1}}
+]
+</script>
+
+<script>
+const WA="5493510000000"; // Reemplazá por tu número: código de país + área + número, sin signos
+/* ====== CONFIGURACIÓN GOOGLE SHEETS: pegá el link CSV publicado ====== */
+const SHEET_URL="PEGA_AQUI_EL_LINK_CSV";
+const KEY="js_products_v1",SZ=["S","M","L","XL","XXL"];
+const CATS={player:"Versión Jugador",fan:"Versión Hincha",retro:"Retro",shorts:"Shorts"};
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const DEF=JSON.parse(document.getElementById("pdata").textContent);
+let P=DEF,cart=ld("js_cart",[]),ship=ld("js_ship",{cp:"",barrio:"",m:""});
+let F={cat:"all",size:"",max:200000,q:""},cur=null,editId=null;
+const $=s=>document.querySelector(s);
+const fmt=n=>"$"+Number(n).toLocaleString("es-AR");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const find=id=>P.find(p=>p.id==id);
+
+/* Ilustración de camiseta (reemplazá por fotos agregando p.images:[url,...]) */
+function art(p,v=0){
+ const c1=p.c1,c2=p.c2,id="k"+p.id+"_"+v,F="font-family:'Bebas Neue',Impact,sans-serif";
+ if(p.images&&p.images.length)return `<img src="${esc(p.images[v]||p.images[0])}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`;
+ if(p.cat==="shorts")return `<svg viewBox="0 0 200 220"><path d="M45 50H155L168 175H108L100 108L92 175H32Z" fill="${c1}"/><path d="M45 50H155V64H45Z" fill="${c2}"/><path d="M155 50L168 175H158L146 50Z" fill="${c2}"/><text x="100" y="${v==1?150:100}" text-anchor="middle" font-size="26" fill="${c2}" style="${F}">${esc(p.club)}</text></svg>`;
+ const body="M62 22L86 12Q100 30 114 12L138 22L186 58L166 90L146 76V206H54V76L34 90L14 58Z";
+ let st="";
+ if(p.pat==="v")st=[66,106,126].map(x=>`<rect x="${x}" y="0" width="${x==66?14:14}" height="220" fill="${c2}"/>`).join("").replace("x=\"126\"","x=\"120\"");
+ if(p.pat==="h")st=[84,118,152].map(y=>`<rect x="0" y="${y}" width="200" height="16" fill="${c2}"/>`).join("");
+ if(p.pat==="d")st=`<polygon points="40,40 70,40 160,200 130,200" fill="${c2}"/>`;
+ const inner=`<clipPath id="${id}"><path d="${body}"/></clipPath><path d="${body}" fill="${c1}"/><g clip-path="url(#${id})">${st}<rect x="0" y="40" width="60" height="14" fill="${c2}" opacity=".0"/><path d="M14 58L34 90L50 80L30 48Z M186 58L166 90L150 80L170 48Z" fill="${c2}"/></g><path d="M86 12Q100 30 114 12L108 10Q100 22 92 10Z" fill="${c2}"/>`;
+ let d=v==1?`<text x="100" y="140" text-anchor="middle" font-size="96" fill="${c2}" stroke="${c1}" stroke-width="1" style="${F}">10</text><text x="100" y="64" text-anchor="middle" font-size="20" fill="${c2}" style="${F}">${esc(p.club.toUpperCase())}</text>`
+  :`<circle cx="124" cy="62" r="8" fill="${c2}" stroke="${c1}"/><rect x="72" y="92" width="56" height="16" rx="3" fill="#0A0A0A" opacity=".55"/>${p.cat==="retro"?`<text x="100" y="150" text-anchor="middle" font-size="34" fill="${c2}" stroke="${c1}" stroke-width=".6" style="${F}">${p.year}</text>`:""}`;
+ const g=v==2?`<g transform="translate(-100 -20) scale(2)">${inner}${d}</g>`:inner+d;
+ return `<svg viewBox="0 0 200 220">${g}</svg>`;
+}
+
+/* Envíos (cotización simulada: ajustá las tarifas) */
+function quote(cp,barrio){
+ const n=parseInt(cp,10);if(!(cp.length>=4&&n>0))return null;
+ const cap=n>=5000&&n<=5023,r=String(cp)[0];
+ const t=r==="5"?[4200,6300]:"12".includes(r)?[5200,7500]:[6200,8900];
+ const o=[{k:"sucursal",l:"Correo Argentino (Sucursal)",p:t[0],n:"3 a 7 días hábiles"},{k:"domicilio",l:"Correo Argentino (Domicilio)",p:t[1],n:"3 a 7 días hábiles"},{k:"retiro",l:"Retiro en local (Córdoba Capital)",p:0,n:"Gratis, coordinamos día y hora"}];
+ if(cap)o.push({k:"cadete",l:"Cadete en Córdoba Capital",p:n<=5009?2500:3500,n:"Precio estimado, se confirma según barrio"+(barrio?` (${esc(barrio)})`:"")});
+ return o;
+}
+const optHTML=(o,sel,fn)=>o.map(x=>`<label class="opt"><input type="radio" name="sm" value="${x.k}" ${sel==x.k?"checked":""} onchange="${fn}('${x.k}')"><span>${x.l}<br><small style="color:var(--mu)">${x.n}</small></span><b>${x.p?fmt(x.p):"Gratis"}</b></label>`).join("");
+
+/* Catálogo */
+function renderCats(){
+ $("#cats").innerHTML=[["all","Todas"],...Object.entries(CATS)].map(([k,l])=>`<button class="chip ${F.cat==k?"on":""}" onclick="F.cat='${k}';renderAll()">${l}</button>`).join("");
+ $("#szf").innerHTML=["",...SZ].map(s=>`<button class="chip ${F.size==s?"on":""}" onclick="F.size='${s}';renderAll()">${s||"Todos"}</button>`).join(" ");
+ $("#pv").textContent=fmt(F.max);
+}
+function renderGrid(){
+ const q=F.q.toLowerCase();
+ const l=P.filter(p=>p.active!==false&&(F.cat=="all"||p.cat==F.cat)&&(!F.size||(p.stock[F.size]||0)>0)&&p.price<=F.max&&(!q||(p.name+" "+p.club+" "+p.country).toLowerCase().includes(q)));
+ $("#grid").innerHTML=l.length?l.map(p=>`<button class="card" onclick="openP(${p.id})"><div class="art">${art(p)}</div><div class="i"><span class="tag">${CATS[p.cat]}</span><h3>${esc(p.name)}</h3><span class="pr">${fmt(p.price)}</span></div></button>`).join(""):`<div class="empty">No hay productos con esos filtros. Probá quitar el talle o subir el precio.</div>`;
+}
+function renderAll(){renderCats();renderGrid()}
+
+/* Detalle de producto */
+function openP(id){cur={p:find(id),v:0,size:"",cp:ship.cp,res:""};drawP();$("#pdpOv").classList.add("on")}
+function drawP(){
+ const {p,v,size}=cur;
+ $("#pdp").innerHTML=`<div><div class="art" style="border-radius:10px">${art(p,v)}</div><div class="th">${Array.from({length:p.images&&p.images.length?p.images.length:3},(_,i)=>i).map(i=>`<button class="${v==i?"on":""}" onclick="cur.v=${i};drawP()" aria-label="Vista ${i+1}">${art(p,i)}</button>`).join("")}</div></div>
+ <div><div class="row" style="justify-content:space-between"><span class="tag">${CATS[p.cat]}</span><button class="ib" onclick="closeAll()" aria-label="Cerrar">✕</button></div>
+ <h2 style="font-size:44px;line-height:1">${esc(p.name)}</h2><div class="pr" style="font-size:24px">${fmt(p.price)}</div>
+ <p style="color:var(--mu)">${esc(p.club)} · ${esc(p.country)} · ${p.year}</p>
+ <b>Talle</b><div class="sizes">${SZ.map(s=>{const n=p.stock[s]||0;return `<button class="sz ${size==s?"on":""}" ${n?"":"disabled"} onclick="cur.size='${s}';drawP()">${s}<small>${n?(n<=3?"Quedan "+n:"Disponible"):"Sin stock"}</small></button>`}).join("")}</div>
+ <div class="box"><b>Calcular envío</b><div class="row" style="margin-top:8px"><input class="f" id="cp" inputmode="numeric" maxlength="4" placeholder="Código postal" value="${esc(cur.cp)}"><input class="f" id="bar" placeholder="Barrio (opcional)" value="${esc(ship.barrio)}"><button class="btn ghost" onclick="calc()">Calcular</button></div><div id="sres">${cur.res}</div></div>
+ <button class="btn" style="width:100%" ${size?"":"disabled"} onclick="addCart()">${size?"Agregar al carrito":"Elegí un talle"}</button></div>`;
+}
+function calc(){
+ cur.cp=$("#cp").value.trim();ship.cp=cur.cp;ship.barrio=$("#bar").value.trim();sv("js_ship",ship);
+ const o=quote(cur.cp,ship.barrio);
+ cur.res=o?o.map(x=>`<div class="tot"><span>${x.l}<br><small style="color:var(--mu)">${x.n}</small></span><b>${x.p?fmt(x.p):"Gratis"}</b></div>`).join(""):`<p style="color:var(--mu)">Ingresá un código postal de 4 dígitos, por ejemplo 5000.</p>`;
+ const b=$("#bar").value;drawP();$("#bar").value=b;
+}
+function addCart(){
+ const {p,size}=cur,k=p.id+"|"+size,it=cart.find(i=>i.k==k),mx=p.stock[size]||0;
+ if(it){if(it.q<mx)it.q++}else cart.push({k,id:p.id,size,q:1});
+ sv("js_cart",cart);closeAll();openCart();
+}
+
+/* Carrito */
+const price=i=>find(i.id)?.price||0;
+function renderCart(){
+ const sub=cart.reduce((a,i)=>a+price(i)*i.q,0),o=quote(ship.cp,ship.barrio)||[];
+ const m=o.find(x=>x.k==ship.m),sp=m?m.p:0;
+ $("#cc").textContent=cart.reduce((a,i)=>a+i.q,0);
+ $("#cart").innerHTML=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="font-size:36px">Tu carrito</h2><button class="ib" onclick="closeAll()" aria-label="Cerrar">✕</button></div>
+ ${cart.length?cart.map(i=>{const p=find(i.id);return `<div class="it"><div class="art">${art(p)}</div><div style="flex:1"><b>${esc(p.name)}</b><br><small style="color:var(--mu)">${CATS[p.cat]} · Talle ${i.size}</small><div class="row qty" style="align-items:center;margin-top:6px"><button onclick="qty('${i.k}',-1)" aria-label="Menos">−</button><span>${i.q}</span><button onclick="qty('${i.k}',1)" aria-label="Más">+</button><button style="margin-left:auto;width:auto;padding:0 10px;border-radius:99px" onclick="qty('${i.k}',-99)">Quitar</button></div></div><b>${fmt(price(i)*i.q)}</b></div>`}).join("")
+ :`<div class="empty">Tu carrito está vacío. Elegí una camiseta y un talle para empezar.</div>`}
+ ${cart.length?`<div class="box"><b>Envío</b><div class="row" style="margin:8px 0"><input class="f" id="ccp" inputmode="numeric" maxlength="4" placeholder="Código postal" value="${esc(ship.cp)}"><input class="f" id="cbar" placeholder="Barrio" value="${esc(ship.barrio)}"><button class="btn ghost" onclick="cShip()">OK</button></div>${o.length?optHTML(o,ship.m,"pickM"):`<small style="color:var(--mu)">Ingresá tu código postal para ver las opciones.</small>`}</div>
+ <div class="tot"><span>Subtotal</span><b>${fmt(sub)}</b></div><div class="tot"><span>Envío</span><b>${m?(sp?fmt(sp):"Gratis"):"A elegir"}</b></div><div class="tot g"><span>Total</span><span>${fmt(sub+sp)}</span></div>
+ <button class="btn wa" ${m?"":"disabled"} onclick="wa()">${m?"Finalizar compra por WhatsApp":"Elegí un método de envío"}</button>`:""}`;
+}
+function qty(k,d){const i=cart.find(x=>x.k==k);if(!i)return;const mx=find(i.id).stock[i.size]||0;i.q=Math.min(mx,i.q+d);if(i.q<=0)cart=cart.filter(x=>x!==i);sv("js_cart",cart);renderCart()}
+function cShip(){ship.cp=$("#ccp").value.trim();ship.barrio=$("#cbar").value.trim();ship.m="";sv("js_ship",ship);renderCart()}
+function pickM(k){ship.m=k;sv("js_ship",ship);renderCart()}
+function wa(){
+ const o=quote(ship.cp,ship.barrio),m=o.find(x=>x.k==ship.m);
+ const sub=cart.reduce((a,i)=>a+price(i)*i.q,0);
+ let t="*Nuevo pedido - Juego Sagrado Camisetas*\n\n";
+ cart.forEach((i,n)=>{const p=find(i.id);t+=`${n+1}. ${p.name}\n   Versión: ${CATS[p.cat]} | Talle: ${i.size} | Cant: ${i.q} | ${fmt(price(i)*i.q)}\n`});
+ t+=`\n*Envío:* ${m.l}\n*CP:* ${ship.cp}${ship.barrio?" | *Barrio:* "+ship.barrio:""}\n*Costo de envío:* ${m.p?fmt(m.p):"Gratis"}\n\nSubtotal: ${fmt(sub)}\n*TOTAL: ${fmt(sub+m.p)}*`;
+ window.open(`https://wa.me/${WA}?text=${encodeURIComponent(t)}`,"_blank");
+}
+function openCart(){renderCart();$("#cartOv").classList.add("on")}
+function closeAll(){document.querySelectorAll(".ov").forEach(e=>e.classList.remove("on"))}
+
+/* Panel de administración (#admin) */
+const FLD=[["name","Nombre"],["club","Club / Selección"],["country","País"],["cat","Categoría (player, fan, retro, shorts)"],["price","Precio"],["year","Año"],["c1","Color 1"],["c2","Color 2"],["pat","Patrón (s, v, h, d)"],["stock","Stock S,M,L,XL,XXL"],["images","URLs de fotos (separadas por coma)"]];
+function fillForm(id){
+ editId=id||null;const p=id?find(id):{name:"",club:"",country:"",cat:"fan",price:60000,year:2026,c1:"#00AA22",c2:"#FFFFFF",pat:"s",stock:{S:1,M:1,L:1,XL:1,XXL:0}};
+ $("#form").innerHTML=FLD.map(([k,l])=>`<div><label>${l}</label><input class="f" id="f_${k}" value="${esc(k=="stock"?SZ.map(s=>p.stock[s]||0).join(","):k=="images"?(p.images||[]).join(","):p[k])}"></div>`).join("");
+}
+function saveP(){
+ const g=k=>$("#f_"+k).value.trim(),st=g("stock").split(",").map(n=>parseInt(n)||0);
+ const p={id:editId||Date.now(),name:g("name"),club:g("club"),country:g("country"),cat:g("cat"),price:+g("price")||0,year:+g("year")||2026,c1:g("c1"),c2:g("c2"),pat:g("pat")||"s",active:editId?find(editId).active:true,stock:Object.fromEntries(SZ.map((s,i)=>[s,st[i]||0]))};
+ const im=g("images");if(im)p.images=im.split(",").map(s=>s.trim());
+ if(!p.name||!CATS[p.cat]){alert("Completá el nombre y una categoría válida: player, fan, retro o shorts.");return}
+ editId?P=P.map(x=>x.id==editId?p:x):P.push(p);
+ sv(KEY,P);fillForm();renderAdmin();renderAll();
+}
+function renderAdmin(){
+ $("#atab").innerHTML=`<tr><th>Producto</th><th>Cat.</th><th>Precio</th><th>Estado</th><th></th></tr>`+P.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.cat}</td><td>${fmt(p.price)}</td><td>${p.active===false?"Oculto":"Visible"}</td><td><button class="chip" onclick="fillForm(${p.id});scrollTo(0,0)">Editar</button> <button class="chip" onclick="tog(${p.id})">${p.active===false?"Habilitar":"Deshabilitar"}</button> <button class="chip" onclick="del(${p.id})">Borrar</button></td></tr>`).join("");
+}
+function tog(id){const p=find(id);p.active=p.active===false;sv(KEY,P);renderAdmin();renderAll()}
+function del(id){if(confirm("¿Borrar este producto?")){P=P.filter(p=>p.id!=id);sv(KEY,P);renderAdmin();renderAll()}}
+function expJ(){const t=$("#exp");t.hidden=false;t.value=JSON.stringify(P,null,1);t.select()}
+function resetP(){if(confirm("Se pierden los cambios de este navegador.")){P=DEF;sv(KEY,P);renderAdmin();renderAll()}}
+function route(){
+ const a=false;$("#admin").hidden=!a;$("#shop").hidden=a;document.querySelector(".hero").hidden=a;
+ if(a){fillForm();renderAdmin()}
+}
+
+/* Tema y eventos */
+function setTheme(t){document.documentElement.dataset.theme=t;$("#theme").textContent=t=="dark"?"☀":"☾";sv("js_theme",t)}
+$("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme=="dark"?"light":"dark");
+$("#cartBtn").onclick=openCart;
+$("#q").oninput=e=>{F.q=e.target.value;renderGrid()};
+$("#pr").oninput=e=>{F.max=+e.target.value;renderAll()};
+document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)closeAll()}));
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeAll()});
+addEventListener("hashchange",route);
+function csv(t){const rows=[];let r=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==","){r.push(c);c=""}else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&t[i+1]=="\n")i++;r.push(c);rows.push(r);r=[];c=""}else c+=ch}if(c||r.length){r.push(c);rows.push(r)}return rows}
+const imgUrl=u=>{const m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/)||u.match(/drive\.google\.com\/open\?id=([\w-]+)/);return m?`https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`:u};
+async function loadDB(){
+ if(SHEET_URL.includes("PEGA_AQUI"))return;
+ try{
+  const r=await fetch(SHEET_URL+(SHEET_URL.includes("?")?"&":"?")+"t="+Date.now());
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const [h,...rows]=csv(await r.text()),k=h.map(x=>x.trim());
+  P=rows.filter(x=>(x[k.indexOf("name")]||"").trim()).map((x,n)=>{
+   const g=c=>(x[k.indexOf(c)]||"").trim(),im=g("images").split(/[\s,|]+/).filter(Boolean).map(imgUrl);
+   return {id:+g("id")||n+1,name:g("name"),club:g("club"),country:g("country"),cat:g("cat").toLowerCase(),price:+g("price").replace(/[^\d]/g,"")||0,year:g("year"),active:g("active").toUpperCase()!="FALSE",stock:Object.fromEntries(SZ.map(z=>[z,parseInt(g(z))||0])),c1:g("c1")||"#1a1a1a",c2:g("c2")||"#00FF38",pat:g("pat")||"s",images:im.length?im:null}
+  }).filter(p=>p.active&&CATS[p.cat]);
+ }catch(e){console.error("Sheets:",e);P=DEF}
+ cart=cart.filter(i=>find(i.id));sv("js_cart",cart);renderAll();renderCart();
+}
+setTheme(ld("js_theme","dark"));renderAll();renderCart();route();loadDB();
+</script>
+</body>
+</html>
