@@ -161,7 +161,7 @@ main{padding:14px 12px 48px}
 
 <section class="hero"><div>
  <h1>El juego es sagrado</h1>
- <p>Camisetas europeas, fútbol argentino, Mundial 2026 y retro. Envíos a todo el país y retiro en Córdoba Capital.</p>
+ <p>Camisetas del fútbol argentino, europeas, Mundial 2026 y retro. Envíos a todo el país y retiro en Córdoba Capital.</p>
  <a class="btn" href="#catalogo">Ver camisetas</a>
 </div></section>
 
@@ -215,14 +215,14 @@ const HERO_IMG="";
    Subí las fotos al repositorio y poné el nombre del archivo. title/text/btn son opcionales. cat = categoría a la que lleva el botón
    (europeas, argentino, mundial, retro, shorts o all). Para sacar el carrusel y usar el banner simple, dejá HERO_SLIDES=[]. */
 const HERO_SLIDES=[
- {img:"bannerJS_PC.jpg",mobile:"banner_celu.jpg",title:"El juego es sagrado",text:"Camisetas europeas, fútbol argentino, Mundial 2026 y retro.",btn:"Ver camisetas",cat:"all"},
- {img:"",mobile:"",title:"Mundial 2026",text:"Las camisetas de las selecciones.",btn:"Ver Mundial",cat:"mundial"},
- {img:"",mobile:"",title:"Camisetas retro",text:"Clásicos que marcaron época.",btn:"Ver retro",cat:"retro"}
+ {img:"bannerJS_PC.jpg",mobile:"banner_celu.jpeg",title:"El juego es sagrado",text:"Camisetas del fútbol argentino, europeas, Mundial 2026 y retro.",btn:"Ver camisetas",cat:"all"},
+ {img:"bannerRetro_PC.jpg",mobile:"bannerRetro_Celu.jpeg",title:"Camisetas retro",text:"Clásicos que marcaron época.",btn:"Ver retro",cat:"retro"},
+ {img:"mundial2026_PC.jpg",mobile:"bannerMundial_pc.jpeg",title:"Mundial 2026",text:"Las camisetas de las selecciones.",btn:"Ver Mundial",cat:"mundial"}
 ];
 /* Barra de marcas: n = nombre (texto) o img = logo (PNG transparente, mejor en blanco, porque la barra es oscura) */
-const BRANDS=[{n:"Nike"},{n:"Adidas"},{n:"Puma"},{n:"New Balance"},{n:"Umbro"},{n:"Kappa"},{n:"Macron"},{n:"Joma"}];
+const BRANDS=[{img:"escudos_banner/argentina.png"},{img:"escudos_banner/river.png"},{img:"escudos_banner/realmadrid.png"},{img:"escudos_banner/boca_2026.png"},{img:"escudos_banner/barcelona.png"},{img:"escudos_banner/independiente.png"},{img:"escudos_banner/liverpool.png"},{img:"escudos_banner/racing.png"},{img:"escudos_banner/atlmadrid.png"},{img:"escudos_banner/sanlorenzo.png"},{img:"escudos_banner/manchesterunited.png"},{img:"escudos_banner/estudiantes.png"},{img:"escudos_banner/manchestercity.png"},{img:"escudos_banner/velez.png"},{img:"escudos_banner/chelsea.png"},{img:"escudos_banner/rosariocentral.png"},{img:"escudos_banner/arsenal.png"},{img:"escudos_banner/newells.png"},];
 const KEY="js_products_v1",SZ=["S","M","L","XL","XXL"];
-const CATS={europeas:"Camisetas europeas",argentino:"Camisetas fútbol argentino",mundial:"Mundial 2026",retro:"Camisetas retro",shorts:"Shorts"};
+const CATS={argentino:"Camisetas fútbol argentino", europeas:"Camisetas europeas", mundial:"Mundial 2026",retro:"Camisetas retro",shorts:"Shorts"};
 const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const DEF=JSON.parse(document.getElementById("pdata").textContent);
